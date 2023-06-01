@@ -1,41 +1,48 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+header('Content-Type: text/html;charset=UTF-8');
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+    if (isset($_POST['message'])) {
+        $entete  = 'MIME-Version: 1.0' . "\r\n";
+        $entete .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+        $entete .= 'From: monysylvain.fr' . "\r\n";
+        $entete .= 'Reply-to: ' . $_POST['email'];
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+        $message = '<h1>Message envoyé depuis votre site web</h1>
+        <p><b>Email : </b>' . $_POST['email'] . '<br>
+            <b>Sujet : </b>' . $_POST['subject'] . '<br>
+        <b>Message : </b>' . htmlspecialchars($_POST['message']) . '</p>';
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+        $retour = mail('monysylvain@gmail.com', 'Envoi depuis page Contact', $message, $entete);
+        if($retour)
+            echo '<p>Votre message a bien été envoyé.</p>';
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+echo '
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
 
-  echo $contact->send();
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta charset=”utf-8″>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="assets/img/logo.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+    <center><h1><br /><br /><br />Merci de nous avoir contactez.<br /> Nous vous répondrons dans les plus bref délais.</h1>
+    <p class="back"><br /><br />Revenir à <a href="index.html">l accueil</a></p></center>
+</div>
+
+</body>
+
+</html>
+
+';
+    }
+
 ?>
